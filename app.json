@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "Camara",
-    "slug": "Camara",
+    "name": "Alarma",
+    "slug": "Alarma",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#FFFFFF"
     },
     "updates": {
@@ -24,7 +24,7 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.essee.Camara"
+      "package": "com.essee.Alarma"
     }
   }
 }

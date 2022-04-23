@@ -20,7 +20,7 @@ const IndexScreen = () => {
     return (   
         <View style={styles.container}> 
             <Image 
-                source={require('../assets/lente.png')}
+                source={require('../assets/estrobo.png')}
                 resizeMode="contain"                 
                 style={styles.logo} 
             />   
@@ -35,10 +35,9 @@ const IndexScreen = () => {
                 </TouchableOpacity>
                 
                 <TouchableOpacity
-                    onPress={handlerSignUp}
-                    style={[styles.button, styles.buttonOutline]}
-                    >
-                    <Text style={styles.buttonOutlineText}>Registrarse</Text>
+                    onPress={handlerSignUp}                    
+                    style={styles.buttonRegister}>
+                    <Text style={styles.buttonRegisterText}>Empecemos a configurar tu alarma</Text>
                 </TouchableOpacity>
             </View>              
         </View> 

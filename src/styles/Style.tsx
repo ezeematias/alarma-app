@@ -1,22 +1,24 @@
 import { StyleSheet } from "react-native";
 
-const primaryColor = '#f0f0f0';
-const secondaryColor = '#ea5051';
+const primaryColor = '#e72b58';
+const secondaryColor = '#4a4b4a';
 const tertiaryColor = '#a6c2d6';
-const fourthColor = '#232e5c';
+const fourthColor = '#ffffff';
 const buttonBorderRadius = 100;
 
 export default StyleSheet.create({
 
     container: {
         flex: 1,
-        backgroundColor: primaryColor,
+        backgroundColor: fourthColor,
         alignItems: 'center',
         justifyContent: 'center',
     },
     logo: {
         width: '100%',
-        height: '30%',
+        height: '50%',
+        top: '-20%',
+
     },
     logoHome: {
         width: '100%',
@@ -43,9 +45,9 @@ export default StyleSheet.create({
         marginTop: '5%',
     },
     button: {
-        backgroundColor: fourthColor,
+        backgroundColor: primaryColor,
         width: '100%',
-        padding: 10,
+        padding: 50,
         borderRadius: buttonBorderRadius,
         alignItems: 'center',
     },
@@ -69,6 +71,9 @@ export default StyleSheet.create({
         borderColor: fourthColor,
         borderWidth: 2,
     },
+    buttonRegister: {
+        marginTop: '15%',
+    },
     buttonOutlineRole: {
         backgroundColor: secondaryColor,
         marginTop: 5,
@@ -76,12 +81,17 @@ export default StyleSheet.create({
         borderWidth: 2,
     },
     buttonText: {
-        color: primaryColor,
+        color: fourthColor,
         fontWeight: '700',
         fontSize: 16,
     },
     buttonOutlineText: {
         color: fourthColor,
+        fontWeight: '700',
+        fontSize: 16,
+    },
+    buttonRegisterText: {        
+        color: primaryColor,
         fontWeight: '700',
         fontSize: 16,
     },
