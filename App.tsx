@@ -43,7 +43,7 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false }} name="Index" component={IndexScreen} />
         <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
         <Stack.Screen options={{ headerShown: false }} name="SignUp" component={SignUpScreen} />
-        <Stack.Screen options={{ headerShown: false }} name="Home" component={HomeScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -52,12 +52,12 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#1d1e3e',
     alignItems: 'center',
     justifyContent: 'center',
   },
   splash: {    
-    backgroundColor: '#fff',
+    backgroundColor: '#1d1e3e',
   },
 });
 

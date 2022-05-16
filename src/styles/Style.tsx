@@ -1,43 +1,52 @@
 import { StyleSheet } from "react-native";
 
-const primaryColor = '#e72b58';
+const primaryColor = '#d31928';
 const secondaryColor = '#4a4b4a';
-const tertiaryColor = '#a6c2d6';
-const fourthColor = '#ffffff';
+const tertiaryColor = '#7f1620';
+const fourthColor = '#fff';
 const buttonBorderRadius = 100;
 
 export default StyleSheet.create({
 
     container: {
         flex: 1,
-        backgroundColor: fourthColor,
+        backgroundColor: 'transparent',
         alignItems: 'center',
         justifyContent: 'center',
     },
     logo: {
         width: '100%',
         height: '50%',
-        top: '-20%',
-
+        top: '-10%',
     },
     logoHome: {
         width: '100%',
         height: '20%',
         marginTop: '10%',
     },
+    logoLogin: {
+        width: '100%',
+        height: '30%',
+        marginTop: '-20%'
+
+    },
     inputContainer: {
         width: '80%',
         marginTop: 10,
     },
     input: {
-        backgroundColor: primaryColor,
+        backgroundColor: tertiaryColor,
+        color: 'white',        
         paddingHorizontal: 15,
         paddingVertical: 10,
         borderRadius: buttonBorderRadius,
-        borderBottomColor: fourthColor,
-        borderBottomWidth: 2,
         marginTop: '5%',
     },
+    image: {
+        flex: 1,
+        justifyContent: 'center'
+      },
+
     buttonContainer: {
         width: '80%',
         justifyContent: 'center',
@@ -48,6 +57,13 @@ export default StyleSheet.create({
         backgroundColor: primaryColor,
         width: '100%',
         padding: 50,
+        borderRadius: buttonBorderRadius,
+        alignItems: 'center',
+    },
+    buttonLogin: {
+        backgroundColor: primaryColor,
+        width: '100%',
+        padding: 10,
         borderRadius: buttonBorderRadius,
         alignItems: 'center',
     },
@@ -66,9 +82,9 @@ export default StyleSheet.create({
         alignItems: 'center',
     },
     buttonOutline: {
-        backgroundColor: primaryColor,
+        backgroundColor: fourthColor,
         marginTop: 5,
-        borderColor: fourthColor,
+        borderColor: primaryColor,
         borderWidth: 2,
     },
     buttonRegister: {
@@ -86,12 +102,12 @@ export default StyleSheet.create({
         fontSize: 16,
     },
     buttonOutlineText: {
-        color: fourthColor,
+        color: primaryColor,
         fontWeight: '700',
         fontSize: 16,
     },
     buttonRegisterText: {        
-        color: primaryColor,
+        color: fourthColor,
         fontWeight: '700',
         fontSize: 16,
     },
