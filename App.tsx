@@ -38,7 +38,7 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer theme={DarkTheme}>
+    <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen options={{ headerShown: false }} name="Index" component={IndexScreen} />
         <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
