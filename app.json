@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Alarma",
-    "slug": "Alarma",
+    "name": "Usuarios",
+    "slug": "Usuarios",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,7 +24,7 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#1d1e3e"
       },
-      "package": "com.essee.Alarma"
+      "package": "com.essee.Usuarios"
     }
   }
 }

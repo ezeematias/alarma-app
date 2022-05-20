@@ -1,241 +1,163 @@
-import { useNavigation } from '@react-navigation/core';
+import { ImageBackground, Text, TouchableOpacity, View } from 'react-native'
+import React from 'react'
+import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { Text, View, TouchableOpacity, Image, ImageBackground, Vibration, TextInput } from 'react-native';
-import { RootStackParamList } from '../../App';
-import { auth } from "../database/firebase";
-import styles from '../styles/StyleHome';
-import { showMessage } from 'react-native-flash-message';
-import { Accelerometer } from 'expo-sensors';
-import { FontAwesome } from '@expo/vector-icons';
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { Audio } from "expo-av";
-import { Camera } from 'expo-camera';
+ 
+ const HomeScreen = () => {
 
-const audioPlayer = new Audio.Sound();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
-const HomeScreen = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>()
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [start, setStart] = useState(false);
-  const [position, setPosition] = useState('horizontal');
-  const [sound, setSound] = useState<any>();
-  const [modal, setModal] = useState(false);
-  const [cord, setData] = useState({
-    x: 0,
-    y: 0,
-    z: 0,
-  });
-
-  const [subscription, setSubscription] = useState<any>(null);
-  const [flagImage, setFlagImage] = useState(true);
-  let imageAlarm = flagImage ? require('../../assets/alarmOn.png') : require('../../assets/alarmOff.png');
-
-  useEffect(() => {
-    Accelerometer.setUpdateInterval(700);
-  }, [])
-
-  useEffect(() => {
-    const { x, y, z } = cord;
-
-    if (x < 1 && x > 0.90 && y < 0.05 && y > 0.01) {
-      setPosition('derecha');
-    } else if (x < -0.5) {
-      setPosition('izquierda');
-    } else if (x > -0.01 && x < 0.5 && y > 1 && y < 1.05 && z > 0.01 && z < 0.19) {
-      setPosition('vertical');
-    } else if (x < -0.00 && x > -0.05 && y > -0.05 && y < 0.05 && z > 0.05 && z < 2) {
-      setPosition('horizontal');
-    }
-  }, [cord]);
-
-  const _subscribe = () => {
-    setSubscription(
-      Accelerometer.addListener(gyroscopeData => {
-        setData(gyroscopeData);
-      })
-    );
-  };
-
-  const _unsubscribe = () => {
-    subscription && subscription.remove();
-    setSubscription(null);
-  };
-
-  useEffect(() => {
-    if (cord.x > 0.5) {
-      setPosition('izquierda');
-    }
-    if (cord.x < -0.5) {
-      setPosition('derecha');
-    }
-    if (cord.y > 0.7) {
-      setPosition('vertical');
-    }
-    if (cord.z > 1) {
-      setPosition('horizontal');
-    }
-  }, [cord.x, cord.y, cord.z]);
-
-  console.log(cord.x);
-  console.log(cord.y);
-  console.log(cord.z);
-
-  React.useEffect(() => {
-    return sound
-      ? () => {
-        sound.unloadAsync();
-      }
-      : undefined;
-  }, [sound]);
-
-  async function playSound(sound: any) {
-    try {
-      await audioPlayer.unloadAsync()
-      await audioPlayer.loadAsync(sound);
-      await audioPlayer.playAsync();
-    } catch (err) {
-      console.warn("Couldn't Play audio", err)
-    }
-  }
-
-  useEffect(() => {
-    if (start) {
-      switch (position) {
-        case 'horizontal':
-          playSound(require('../../assets/sounds/alarm1.mp3'));
-          Vibration.vibrate(5000);
-          break;
-        case 'izquierda':
-          playSound(require('../../assets/sounds/alarm2.mp3'));
-          break;
-        case 'derecha':
-          playSound(require('../../assets/sounds/alarm3.mp3'));
-          break;
-        case 'vertical':
-          playSound(require('../../assets/sounds/alarm4.mp3'));
-          Camera.requestPermissionsAsync();
-          break;
-      }
-    }
-  }, [position])
-
-  const handleStart = () => {
-    setFlagImage(previousState => !previousState);
-    if (!start) {
-      setStart(true);
-      _subscribe();
-      setModal(true);
-    } else {
-      setStart(false);
-      _unsubscribe();
-      setModal(false);
-    }
-  }
-
-  const handleEnd = async () => {
-    setLoading(true);
-    await signInWithEmailAndPassword(auth, auth.currentUser?.email || "", password)
-      .then((userCredential: { user: any; }) => {
-        const user = userCredential.user;
-        console.log("Logged in with", user.email);
-        if (user) {
-          setModal(false);
-          setStart(false);
-          handleClose();
-          _unsubscribe();
-          setFlagImage(previousState => !previousState);
-          audioPlayer.pauseAsync();
-          audioPlayer.unloadAsync();
-        }
-      })
-      .catch((error) => {
-        showMessage({ type: "danger", message: "Error", description: "Contraseña inválida" });
-      });
-  }
-
-  const handleClose = () => {
-    setModal(false);
-  }
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <TouchableOpacity onPress={handlerSingOut}>
-          <FontAwesome name="power-off" size={24} color="#1d1e3e" />
-        </TouchableOpacity>
-      ),
-      headerLeft: () => (
-        <Text style={styles.textUser}>{auth?.currentUser?.displayName}</Text>
-      ),  
-      headerTitle: () => (  
-        <Text></Text>                             
-      ),     
-      headerBackVisible: false,
-         
-      headerBackButtonMenuEnabled: false,
-      headerStyle: {
-      backgroundColor: '#fff',
-      }
-    });
-  }, []);
-
-  async function handlerSingOut() {
-    await auth
+  const handleSignOut = () => {
+    auth
       .signOut()
-      .then(() => { navigation.navigate('Index') })
-      .catch((error: any) => alert(error.message))
+      .then(() => {
+        navigation.replace("Login")
+      })
+      .catch((error: { message: any; }) => alert(error.message))
   }
 
-  function handlerBack() {
-    navigation.replace('Home');
+  const createUser = () => {
+    navigation.replace("LoadForm")
+  }
+
+  const loadUserList = () => {
+    navigation.replace("LoadList")
   }
 
   return (
-    <ImageBackground
-      source={require("../../assets/background.png")}
-      resizeMode="cover"
-      style={styles.image}
-    >
-      <View style={styles.container}>
-        {subscription && position === "vertical" && <Camera flashMode="torch" style={{ height: 1, width: 1 }}
-        ></Camera>}
+    <View style={styles.container}>
+      <ImageBackground
+        source={require("../../assets/background.jpg")}
+        resizeMode="cover"
+        style={styles.image}
+        imageStyle = {{opacity:0.4}}>
 
-
-        <View style={styles.body}>
-          <TouchableOpacity onPress={handleStart}>
-            <Image source={imageAlarm} style={styles.buttonImageIcon} />
+        <View style={ styles.exitSection }>
+          <Text style={styles.exitText}>USUARIO: {auth.currentUser?.email}</Text>
+          <TouchableOpacity style={styles.exitButton} onPress={handleSignOut}>
+  
           </TouchableOpacity>
-
-          {modal ? (
-            <View style={{ flexDirection: 'column', alignContent: 'center', alignItems: 'center' }} >
-
-              <Text style={styles.modalText}></Text>
-              <View style={styles.input}>
-                <FontAwesome name="key" size={24} color="#d31928" />
-                <TextInput
-                  placeholder="Confirme contraseña..."
-                  placeholderTextColor="#d31928"
-                  style={styles.textInput}
-                  value={password}
-                  onChangeText={(text) => setPassword(text)}
-                  secureTextEntry
-                  autoCompleteType='off'
-                />
-              </View>
-              <TouchableOpacity onPress={handleEnd} style={styles.buttonStyle}>
-                <Text style={styles.buttonText}>Cancelar alarma</Text>
-              </TouchableOpacity>
-            </View>
-
-          ) :
-            <Text style={styles.buttonText}>Presione la alarma para iniciar</Text>
-          }
         </View>
-      </View>
-    </ImageBackground>
-  );
-}
 
-export default HomeScreen;
+        
+        <View style={styles.body}>
+
+        <TouchableOpacity onPress={createUser} style={styles.buttonLoadData}>
+          <Text style={styles.buttonText}>CARGA DE USUARIO</Text>         
+        </TouchableOpacity>
+        
+        <TouchableOpacity onPress={loadUserList} style={styles.buttonList}>
+              <Text style={styles.buttonText}>VER LISTADO DE USUARIOS</Text>         
+        </TouchableOpacity>
+
+      </View>
+      </ImageBackground>
+    </View>
+  );
+ }
+
+ export default HomeScreen
+ 
+ import { StyleSheet } from 'react-native'
+import { auth } from '../database/firebase';
+import { RootStackParamList } from '../../App';
+
+const styles = StyleSheet.create({
+   container: {
+     flex: 1,
+     backgroundColor: '#3c8e99'
+   },
+   image: {
+     flex: 1,
+     justifyContent: "center"
+   },
+   header: {
+     flex: 1,
+     alignItems: 'center',
+     justifyContent: 'center',
+     backgroundColor: 'transparent',    
+   },
+   body: {
+     marginTop: 200,
+     alignItems: 'center',
+     justifyContent: 'center',
+     backgroundColor: 'transparent',
+     marginBottom: 300,    
+   },
+   button: {
+     backgroundColor: 'transparent',
+     borderColor: 'white',
+     margin: 5,
+     width: '30%',
+     padding: 15,
+     borderRadius: 25,
+     borderWidth: 2,
+     alignItems: 'center',
+   },
+   buttonText: {
+     color: 'white',
+     fontSize: 15,
+     fontFamily: 'AlfaSlabOne_400Regular',
+   },
+   exitSection: {
+     width: '90%',
+     alignItems: 'center',
+     flexDirection: "row",
+     justifyContent: 'space-between',
+   },
+   exitText: {
+     color: 'black',
+     fontSize: 15,
+     fontFamily: 'AlfaSlabOne_400Regular',
+     marginLeft: 10,
+   },
+   exitButton: {
+     backgroundColor: 'transparent',
+     borderColor: 'black',
+     margin: 5,
+     width: '30%',
+     padding: 15,
+     borderRadius: 25,
+     borderWidth: 2,
+     marginLeft: 35,
+     alignItems: 'center',
+     justifyContent: "center",
+   },
+   buttonImageIconStyle: {
+     padding: 10,
+     margin: 5,
+     height: 50,
+     width: 50,
+     resizeMode: 'contain',
+   },
+   faIcon: {
+     color: 'black',
+   },
+   buttonLoadData: {
+     backgroundColor: ' rgba(131, 133, 140, 0.8);',
+     borderLeftColor: '#05153F',
+     borderLeftWidth: 10,
+     borderRadius: 10,
+     margin: 5,
+     padding: 15,
+     justifyContent: 'center',
+     alignItems: 'center',
+     width: '80%',
+   },
+   buttonList: {
+     backgroundColor: ' rgba(168, 229, 128, 0.8);',
+     borderLeftColor: '#F2C335',
+     borderLeftWidth: 10,
+     borderRadius: 10,
+     marginTop: 10,
+     margin: 5,
+     padding: 15,
+     width: '80%',
+     justifyContent: 'center',
+     alignItems: 'center',
+   },
+ });
+ 
+ 
+ 
+ 

@@ -4,9 +4,11 @@ import LoginScreen from './src/screens/LoginScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import IndexScreen from './src/screens/IndexScreen';
 import SignUpScreen from './src/screens/SignUpScreen';
+import LoadFormScreen from './src/screens/LoadFormScreen';
+import LoadListScreen from './src/screens/LoadListScreen';
 import AnimatedLottieView from 'lottie-react-native';
 import { StyleSheet } from 'react-native';
-import { DarkTheme, NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 
 
 export type RootStackParamList = {
@@ -14,6 +16,8 @@ export type RootStackParamList = {
   Login: any;
   Index: any;
   SignUp: any;
+  LoadForm: any;
+  LoadList: any;
 }
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -44,6 +48,8 @@ export default function App() {
         <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
         <Stack.Screen options={{ headerShown: false }} name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="LoadForm" component={LoadFormScreen} />
+        <Stack.Screen name="LoadList" component={LoadListScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

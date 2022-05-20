@@ -73,7 +73,7 @@ const SignScreen = () => {
 
     return (
         <ImageBackground
-            source={require("../../assets/background.png")}
+            source={require("../../assets/background.jpg")}
             resizeMode="cover"
             style={styles.image}
         >
