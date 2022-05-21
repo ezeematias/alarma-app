@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/core";
 import React, { useEffect, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, ImageBackground } from "react-native";
 import { auth } from "../database/firebase";
-import { createUserWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { createUserWithEmailAndPassword, onAuthStateChanged, updateProfile } from "firebase/auth";
 import { RootStackParamList } from "../../App";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Spinner from "react-native-loading-spinner-overlay/lib";
@@ -58,6 +58,8 @@ const SignScreen = () => {
         } else {
             setMessageError("Las contraseñas no coinciden");
         }
+        await updateProfile(auth.currentUser!, { displayName: displayName }).catch(
+            (err) => console.log(err));
     }
 
     const handlerBack = () => {
@@ -73,7 +75,7 @@ const SignScreen = () => {
 
     return (
         <ImageBackground
-            source={require("../../assets/background.jpg")}
+            source={require("../../assets/background.png")}
             resizeMode="cover"
             style={styles.image}
         >
@@ -86,7 +88,7 @@ const SignScreen = () => {
                     />
                 </View>}
                 <Image
-                    source={require('../../assets/alarmOff.png')}
+                    source={require('../../assets/user.png')}
                     resizeMode="contain"
                     style={styles.logoLogin}
                 />

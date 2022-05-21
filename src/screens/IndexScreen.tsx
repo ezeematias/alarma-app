@@ -19,30 +19,29 @@ const IndexScreen = () => {
 
     return (
             <ImageBackground
-                source={require("../../assets/background.jpg")}
-                resizeMode="cover"
+                source={require("../../assets/background.png")}
+                resizeMode="repeat"
                 style={styles.image}
                 >
         <View style={styles.container}>
-                <Image
-                    source={require('../../assets/alarmOff.png')}
-                    resizeMode="contain"
-                    style={styles.logo}
-                />
 
                 <View style={styles.buttonContainer} >
                     <TouchableOpacity
                         onPress={handlerSingIn}
-
                         style={styles.button}
                     >
                         <Text style={styles.buttonText}>Iniciar Sesión</Text>
+                <Image
+                    source={require('../../assets/user.png')}
+                    resizeMode="contain"
+                    style={styles.logo}
+                />
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         onPress={handlerSignUp}
                         style={styles.buttonRegister}>
-                        <Text style={styles.buttonRegisterText}>Empecemos a configurar tu alarma</Text>
+                        <Text style={styles.buttonRegisterText}>Registrarse</Text>
                     </TouchableOpacity>
                 </View>
 

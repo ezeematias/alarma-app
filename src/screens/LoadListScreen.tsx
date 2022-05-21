@@ -4,6 +4,8 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { collection, getDocs, orderBy, query } from 'firebase/firestore'
 import { getDownloadURL, ref } from 'firebase/storage'
+import { FontAwesome } from '@expo/vector-icons';
+import styles from "../styles/Style";
 
 import Modal from "react-native-modal";
 
@@ -14,27 +16,38 @@ const LoadList = () => {
   const [data, setData] = useState<any>([]);
   const [isModalSpinnerVisible, setModalSpinnerVisible] = useState(false);
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  
+
   const handleReturn = () => {
-    
+
     if (auth.currentUser?.email == "admin@gmail.com") {
       navigation.replace("Home");
     }
     else {
       auth
-      .signOut()
-      .then(() => {
-        navigation.replace("Login")
-      })
-      .catch(error => alert(error.message))
+        .signOut()
+        .then(() => {
+          navigation.replace("Login")
+        })
+        .catch(error => alert(error.message))
     }
   }
 
+  async function handlerSingOut() {
+    await auth
+      .signOut()
+      .then(() => { navigation.replace('Index') })
+      .catch((error: any) => alert(error.message))
+  }
+
+  function handlerBack() {
+    navigation.replace('Home');
+  }
+
   useFocusEffect(
-      useCallback(() => {
-          getDocuments();
-          toggleSpinnerAlert();
-  }, []))
+    useCallback(() => {
+      getDocuments();
+      toggleSpinnerAlert();
+    }, []))
 
   const toggleSpinnerAlert = () => {
     setModalSpinnerVisible(true);
@@ -46,70 +59,73 @@ const LoadList = () => {
   const getDocuments = async () => {
     setLoading(true);
     setData([]);
-        try {
-            const querySnapshot = await (await getDocs(query(collection(db, "usuariosInfo"), orderBy('lastName', 'asc'), orderBy('name', 'asc'))));  
+    try {
+      const querySnapshot = await (await getDocs(query(collection(db, "usuariosInfo"), orderBy('lastName', 'asc'), orderBy('name', 'asc'))));
 
-            querySnapshot.forEach(async (doc) => {
-                const res:any = {...doc.data(), id:doc.id};
-                const imageUrl = await getDownloadURL(ref(storage, res.image));
-                setData((arr: any) => [...arr, {...res, imageUrl: imageUrl}]);
-            });
-        } catch (error) {
-            console.log(error)                    
-        }finally{
-            setLoading(false);
-        }
+      querySnapshot.forEach(async (doc) => {
+        const res: any = { ...doc.data(), id: doc.id };
+        const imageUrl = await getDownloadURL(ref(storage, res.image));
+        setData((arr: any) => [...arr, { ...res, imageUrl: imageUrl }]);
+      });
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false);
+    }
   };
 
-  
-  
+
+
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerLeft: () => (
-        <TouchableOpacity style={styles.exitButton} onPress={handleReturn}>
-            <Image
-              source={require("../../assets/icon.png")}
-              style={styles.buttonImageExit}
-            />
-          </TouchableOpacity>
-     ),
-      headerTitle: () => (
-        <Text style={styles.exitText}>LISTA DE USUARIOS</Text>
+      headerRight: () => (
+        <TouchableOpacity onPress={handlerSingOut}>
+          <FontAwesome name="power-off" size={24} color="#fff" />
+        </TouchableOpacity>
       ),
-      headerTintColor: "transparent",
+      headerLeft: () => (
+        <TouchableOpacity onPress={handlerBack}>
+          <FontAwesome name="step-backward" size={24} color="#fff" />
+        </TouchableOpacity>
+      ),
+      headerTitle: () => (
+
+        <Text style={styles.title}>Lista de usuarios</Text>
+      ),
+      headerTintColor: "#fff",
+      headerTitleAlign: 'center',
       headerBackButtonMenuEnabled: false,
       headerStyle: {
-        backgroundColor: 'rgba(168, 229, 128, 0.8);',
+        backgroundColor: '#896867',
       }
     });
   }, []);
 
   return (
     <View style={styles.container}>
-      {loading}
-      <ImageBackground
-        source={require("../../assets/background.jpg")}
-        resizeMode="cover"
-        style={styles.image}
-        imageStyle={{ opacity: 0.2 }}>
-        
-        <View style={styles.body}>
+    <ImageBackground
+    source={require("../../assets/background.png")}
+    resizeMode="cover"
+    style={styles.image}    >
+          {loading}
+
+        <View style={stylesLoad.body}>
           <ScrollView>
-          {data.map((item : any) => (               
-              <View style={styles.cardStyle}>
+            {data.map((item: any) => (
+              <View style={stylesLoad.cardStyle}>
                 <Image resizeMode='cover' style={{ flex: 1, borderRadius: 10 }} source={{ uri: item.imageUrl }} />
                 <View style={{ padding: 10, justifyContent: 'space-between', height: 100 }}>
                   <View>
-                    <Text style={styles.tableHeaderText}>{item.lastName} {item.name}</Text>
-                    <Text style={styles.tableCellText}>DNI: {item.dni}</Text>
-                    <Text style={styles.tableCellText}>Correo Electrónico: {item.email}</Text>
+                    <Text style={stylesLoad.tableHeaderText}>{item.lastName} {item.name}</Text>
+                    <Text style={stylesLoad.tableCellText}>{item.dni}</Text>
+                    <Text style={stylesLoad.tableCellText}>{item.email}</Text>
                   </View>
                 </View>
               </View>
             ))}
-          </ScrollView>           
+          </ScrollView>
         </View>
-                
+
         <View>
           <Modal isVisible={isModalSpinnerVisible}>
             <ActivityIndicator size="large" color="3c8e99" />
@@ -119,14 +135,14 @@ const LoadList = () => {
       </ImageBackground>
     </View>
   );
- }
- export default LoadList
- 
- import { StyleSheet } from 'react-native'
+}
+export default LoadList
+
+import { StyleSheet } from 'react-native'
 import { auth, db, storage } from '../database/firebase';
 import { RootStackParamList } from '../../App';
 
-    const styles = StyleSheet.create({
+const stylesLoad = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#3c8e99',
@@ -148,7 +164,6 @@ import { RootStackParamList } from '../../App';
   exitText: {
     color: 'black',
     fontSize: 15,
-    fontFamily: 'AlfaSlabOne_400Regular',
     textAlign: 'center',
   },
   exitButton: {
@@ -186,7 +201,7 @@ import { RootStackParamList } from '../../App';
     justifyContent: 'center',
   },
   tableRow: {
-    flexDirection: 'row', 
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -198,20 +213,19 @@ import { RootStackParamList } from '../../App';
   tableHeaderText: {
     color: 'black',
     fontSize: 20,
-    fontFamily: 'AlfaSlabOne_400Regular',
+
   },
   tableCellText: {
     color: 'black',
     fontSize: 15,
-    fontFamily: 'AlfaSlabOne_400Regular',
   },
   cardStyle: {
-    backgroundColor: '#F2C335',
-    borderColor: '#F2C335',
-    height: 300, 
-    width: '95%', 
+    backgroundColor: '#fff',
+    borderColor: '#fff',
+    height: 300,
+    width: '95%',
     margin: 10,
     borderRadius: 10,
-    borderWidth: 2 
+    borderWidth: 2
   }
 });

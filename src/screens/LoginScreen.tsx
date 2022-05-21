@@ -1,12 +1,20 @@
 import { useNavigation } from "@react-navigation/core";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, ImageBackground } from "react-native";
 import { auth } from "../database/firebase";
 import styles from "../styles/Style";
-import { signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { signInWithEmailAndPassword} from "firebase/auth";
 import { RootStackParamList } from "../../App";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Spinner from "react-native-loading-spinner-overlay/lib";
+
+export type FormData={
+    email:string;
+    password:string;
+    passwordRepeat?:string;
+}
+
+export let admin = false;
 
 const LoginScreen = () => {
     const [email, setEmail] = useState("");
@@ -49,17 +57,22 @@ const LoginScreen = () => {
 
     const guestLogin = () => {
         setEmail("invitado@gmail.com");
-        setPassword("123456");
+        setPassword("123456");  
+        admin = false;
     }
-
+    
     const adminLogin = () => {
         setEmail("admin@monsters.com");
         setPassword("123456");
+        admin = true;     
+        
     }
-
+    
     const supplierLogin = () => {
         setEmail("usuario@monsters.com");
         setPassword("123456");
+        admin = false;
+       
     }
 
     const handlerBack = () => {
@@ -68,8 +81,8 @@ const LoginScreen = () => {
 
     return (
         <ImageBackground
-            source={require("../../assets/background.jpg")}
-            resizeMode="cover"
+            source={require("../../assets/background.png")}
+            resizeMode="repeat"
             style={styles.image}
         >
 
@@ -81,7 +94,7 @@ const LoginScreen = () => {
                     />
                 </View>}
                 <Image
-                    source={require('../../assets/alarmOff.png')}
+                    source={require('../../assets/user.png')}
                     resizeMode="contain"
                     style={styles.logoLogin}
                 />
@@ -91,7 +104,7 @@ const LoginScreen = () => {
                         style={styles.buttonError}
                         onPress={() => setMessage("")}
                     >
-                        <Text style={styles.buttonText}>{message}</Text>
+                        <Text style={styles.buttonOutlineText}>{message}</Text>
                     </TouchableOpacity> : null}
 
                     <TextInput placeholder="Correo electrónico"
@@ -127,24 +140,24 @@ const LoginScreen = () => {
                     </TouchableOpacity>
                 </View>
 
-                <View style={styles.buttonContainer} >
+                <View style={styles.buttonAccessContainer} >
                     <TouchableOpacity
                         onPress={guestLogin}
                         style={[styles.buttonRole, styles.buttonOutlineRole]}
                     >
-                        <Text style={styles.buttonText}>Invitado</Text>
+                        <Text style={styles.buttonOutlineText}>Invitado</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={adminLogin}
                         style={[styles.buttonRole, styles.buttonOutlineRole]}
                     >
-                        <Text style={styles.buttonText}>Administrador</Text>
+                        <Text style={styles.buttonOutlineText}>Admin</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         onPress={supplierLogin}
                         style={[styles.buttonRole, styles.buttonOutlineRole]}
                     >
-                        <Text style={styles.buttonText}>Proveedores</Text>
+                        <Text style={styles.buttonOutlineText}>Usuario</Text>
                     </TouchableOpacity>
                 </View>
             </View>

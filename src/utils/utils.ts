@@ -18,8 +18,3 @@ export const getBlob = async (image: string) => {
     xhr.open("GET", image, true);
     xhr.send(null);
 })};
-
-export const splitUserFromEmail = (email:string) => {
-    const emailUser = email.split('@')[0];
-    return emailUser.charAt(0).toUpperCase() + emailUser.slice(1)
-}

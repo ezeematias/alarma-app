@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './src/screens/LoginScreen';
 import HomeScreen from './src/screens/HomeScreen';
@@ -8,7 +8,7 @@ import LoadFormScreen from './src/screens/LoadFormScreen';
 import LoadListScreen from './src/screens/LoadListScreen';
 import AnimatedLottieView from 'lottie-react-native';
 import { StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { DefaultTheme, NavigationContainer } from '@react-navigation/native';
 
 
 export type RootStackParamList = {
@@ -41,8 +41,16 @@ export default function App() {
       />)
   }
 
+  const MyTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: '#896867'
+    },
+  };
+
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={MyTheme}>
       <Stack.Navigator>
         <Stack.Screen options={{ headerShown: false }} name="Index" component={IndexScreen} />
         <Stack.Screen options={{ headerShown: false }} name="Login" component={LoginScreen} />
@@ -58,12 +66,13 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1d1e3e',
+    backgroundColor: '#896867',
     alignItems: 'center',
     justifyContent: 'center',
+    width: '100%',
   },
   splash: {    
-    backgroundColor: '#1d1e3e',
+    backgroundColor: '#896867',
   },
 });
 
